@@ -46,7 +46,7 @@ func LogInit(w Writers){
 		// gets current working directory
 		dir, err := os.Getwd()
 		// creates a log file and sets it into append mode
-		file, err := os.OpenFile(w.logfile, os.O_CREATE|os.O_WRONLY, 0666)
+		file, err := os.OpenFile(w.Logfile, os.O_CREATE|os.O_WRONLY, 0666)
 		if w.Append_mode {
 			file, err = os.OpenFile(w.Logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		}
