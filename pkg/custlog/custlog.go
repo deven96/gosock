@@ -25,17 +25,19 @@ var (
 // declare a new writer struct whenever you want to change default writers
 type Writers struct {
 	Tracehandle, Infohandle, Warninghandle, Errorhandle io.Writer
+	Append bool
 	Logfile string //name of logfile
 }
 
 //default writer values
-func DefaultWriters (file_name string) Writers {
+func DefaultWriters (file_name string, append bool) Writers {
 	return Writers{
 		Tracehandle: ioutil.Discard,
 		Infohandle: os.Stdout,
 		Warninghandle: os.Stdout,
 		Errorhandle: os.Stderr,
-		Logfile: file_name,		
+		Logfile: file_name,
+		Append: append,		
 	}
 }
 
@@ -46,7 +48,9 @@ func LogInit(w Writers){
 		// creates a log file and sets it into append mode
 		var file *os.File
 		file, err = os.OpenFile(w.Logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-		
+		if w.Append == false{
+			file, err = os.Create(w.Logfile)
+		}
 		if err != nil {
 		    log.Fatalln("Failed to open log file ", w.Logfile, ":", err)
 		}

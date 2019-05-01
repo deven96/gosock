@@ -34,7 +34,7 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	// set log name along with default outputs
-	def_writers := custlog.DefaultWriters("main.log")
+	def_writers := custlog.DefaultWriters("main.log", false)
 	//TRACE will be Discarded, while the rest will be routed accordingly
 	custlog.LogInit(def_writers)	
 	custlog.Trace.Println("Imported Custom Logging")

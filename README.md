@@ -22,8 +22,8 @@ To use the logging library, call this snippet preferably in the init
     )
     
     func init() {
-        // use the default_writers
-        def_writers := custlog.DefaultWriters("test.log")
+        // name the log file "test.log" and write to it in append mode
+        def_writers := custlog.DefaultWriters("test.log", true)
         custlog.LogInit(def_writers)
     }
 

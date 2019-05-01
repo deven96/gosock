@@ -7,7 +7,7 @@ import (
 )
 
 func init(){
-	def_writers := custlog.DefaultWriters("main.log")
+	def_writers := custlog.DefaultWriters("main.log", true)
 	//TRACE will be Discarded, while the rest will be routed accordingly
 	custlog.LogInit(def_writers)	
 	
