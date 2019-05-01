@@ -1,13 +1,15 @@
-/**
- - Simple Chat application using sockets in GoLang
-**/
+/*
+ Simple Chat application using sockets in GoLang
+*/
 package main
 
 import (
+//	"os"
 	"net/http"
 	"text/template"
 	"path/filepath"
 	"sync"
+	"strings"
 	"github.com/deven96/gosock/pkg/custlog"
 )
 
@@ -23,20 +25,33 @@ type templateHandler struct {
 // ServeHTTP handles the HTTPRequest
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func(){
-		t.templ = template.Must(template.ParseFiles(TEMPLATE_FOLDER+ "/"+ t.filename))
+		filearr := []string{TEMPLATE_FOLDER, t.filename}
+		filepath := strings.Join(filearr, "/")
+		t.templ = template.Must(template.ParseFiles(filepath))
 	})
 	t.templ.Execute(w, nil)
 }
 
 func main() {
 	// set log name along with default outputs
-	var def_writers custlog.Writers = custlog.DefaultWriters("test.log")
+	def_writers := custlog.DefaultWriters("main.log")
 	//TRACE will be Discarded, while the rest will be routed accordingly
 	custlog.LogInit(def_writers)	
 	custlog.Trace.Println("Imported Custom Logging")
 	custlog.Info.Println("Log file can be found at ", custlog.Logfile)
+	//os.Setenv("GOSOCK_LOG", custlog.Logfile)
+
+	// create a room
+	r := newRoom()
+	
+	/* Routes */
 	// Handle function for route "/"
 	http.Handle("/", &templateHandler{filename: "chat.html"})
+	http.Handle("/room", r)
+
+	//start the room
+	custlog.Info.Println("Initializing Room...")
+	go r.run()
 	// port variable
 	port := ":8008"
 	//start the webserver

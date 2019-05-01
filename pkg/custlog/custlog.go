@@ -25,7 +25,6 @@ var (
 // declare a new writer struct whenever you want to change default writers
 type Writers struct {
 	Tracehandle, Infohandle, Warninghandle, Errorhandle io.Writer
-	Append_mode bool //append to existing logfile
 	Logfile string //name of logfile
 }
 
@@ -36,7 +35,6 @@ func DefaultWriters (file_name string) Writers {
 		Infohandle: os.Stdout,
 		Warninghandle: os.Stdout,
 		Errorhandle: os.Stderr,
-		Append_mode: false,
 		Logfile: file_name,		
 	}
 }
@@ -46,10 +44,9 @@ func LogInit(w Writers){
 		// gets current working directory
 		dir, err := os.Getwd()
 		// creates a log file and sets it into append mode
-		file, err := os.OpenFile(w.Logfile, os.O_CREATE|os.O_WRONLY, 0666)
-		if w.Append_mode {
-			file, err = os.OpenFile(w.Logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-		}
+		var file *os.File
+		file, err = os.OpenFile(w.Logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		
 		if err != nil {
 		    log.Fatalln("Failed to open log file ", w.Logfile, ":", err)
 		}
