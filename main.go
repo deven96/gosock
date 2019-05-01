@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	custlog "lib/custlog"
+	"github.com/deven96/gosock/pkg/custlog"
 )
 
 func main() {
