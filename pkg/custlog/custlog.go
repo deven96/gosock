@@ -24,20 +24,20 @@ var (
 
 // declare a new writer struct whenever you want to change default writers
 type Writers struct {
-	tracehandle, infohandle, warninghandle, errorhandle io.Writer
-	append_mode bool
-	logfile string
+	Tracehandle, Infohandle, Warninghandle, Errorhandle io.Writer
+	Append_mode bool //append to existing logfile
+	Logfile string //name of logfile
 }
 
 //default writer values
 func DefaultWriters (file_name string) Writers {
 	return Writers{
-		tracehandle: ioutil.Discard,
-		infohandle: os.Stdout,
-		warninghandle: os.Stdout,
-		errorhandle: os.Stderr,
-		append_mode: false,
-		logfile: file_name,		
+		Tracehandle: ioutil.Discard,
+		Infohandle: os.Stdout,
+		Warninghandle: os.Stdout,
+		Errorhandle: os.Stderr,
+		Append_mode: false,
+		Logfile: file_name,		
 	}
 }
 
@@ -47,38 +47,38 @@ func LogInit(w Writers){
 		dir, err := os.Getwd()
 		// creates a log file and sets it into append mode
 		file, err := os.OpenFile(w.logfile, os.O_CREATE|os.O_WRONLY, 0666)
-		if w.append_mode {
-			file, err = os.OpenFile(w.logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		if w.Append_mode {
+			file, err = os.OpenFile(w.Logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		}
 		if err != nil {
-		    log.Fatalln("Failed to open log file ", w.logfile, ":", err)
+		    log.Fatalln("Failed to open log file ", w.Logfile, ":", err)
 		}
 		//empty log file
 		//file.Write([]byte(``,))
 		//export logfile name
-		Logfile = dir + "/" + w.logfile
+		Logfile = dir + "/" + w.Logfile
 		
 		//create all log objects writing to the multiWriter i.e `handle` and a file
 		Trace = log.New(
-			io.MultiWriter(file, w.tracehandle),
+			io.MultiWriter(file, w.Tracehandle),
 			"TRACE: ",
 			log.Ldate|log.Ltime|log.Lshortfile,
 		)
 
 		Info = log.New(
-					io.MultiWriter(file, w.infohandle),
+					io.MultiWriter(file, w.Infohandle),
 					"INFO: ",
 					log.Ldate|log.Ltime|log.Lshortfile,
 		)
 
 		Warning = log.New(
-					io.MultiWriter(file, w.warninghandle),
+					io.MultiWriter(file, w.Warninghandle),
 					"WARNING: ",
 					log.Ldate|log.Ltime|log.Lshortfile,
 		)
 
 		Error = log.New(
-					io.MultiWriter(file, w.errorhandle),
+					io.MultiWriter(file, w.Errorhandle),
 					"ERROR: ",
 					log.Ldate|log.Ltime|log.Lshortfile,
 		)
