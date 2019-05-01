@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	custlog "./lib/custlog"
+	custlog "lib/custlog"
 )
 
 func main() {
