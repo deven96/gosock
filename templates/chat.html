@@ -43,6 +43,7 @@
         }
         var i = 0
         socket.onmessage = function(e) {
+            console.log(e)
             var server_message = e.data
             if (i % 2 == 0) {
                 messages.append($("<li>").text(server_message).addClass("float-left"))

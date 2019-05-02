@@ -35,8 +35,8 @@ func (c *client) read(){
 			return
 		}
 		// send msg to the forward channel of the client
-		c.room.forward <- msg
 		custlog.Info.Printf("Reading message **%s**", msg)
+		c.room.forward <- msg
 	}
 }
 

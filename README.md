@@ -50,6 +50,10 @@ To run the project,
     ./gosock
 ```
 
+## Example
+
+![Example usage](static/assets/example.png)
+
 ## License (MIT)
 
 This project is opened under the [MIT 2.0 License](https://github.com/deven96/gosock/blob/master/LICENSE) which allows very broad use for both academic and commercial purposes.

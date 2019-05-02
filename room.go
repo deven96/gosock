@@ -47,8 +47,8 @@ func (r *room) run(){
 			case client:= <- r.join:
 				// joining
 				r.clients[client] = true
-				custlog.Info.Printf("Client %s is joining...", client.color)
-				txt := fmt.Sprintf("ADMIN: Client %s is joining the room", client.color)
+				custlog.Info.Printf("Client %s joined the room...", client.color)
+				txt := fmt.Sprintf("ADMIN: Client %s joined the room", client.color)
 				msg := []byte(txt)
 				for client := range r.clients {
 					client.send <- msg
@@ -60,7 +60,7 @@ func (r *room) run(){
 				delete(r.clients, client)
 				// close send channel of client
 				close(client.send)
-				msg := []byte(fmt.Sprintf("ADMIN: Client %s is leaving the room", client.color))
+				msg := []byte(fmt.Sprintf("ADMIN: Client %s left the room", client.color))
 				for client := range r.clients {
 					client.send <- msg
 				}
