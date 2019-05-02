@@ -1,7 +1,6 @@
 package main
 
 import (
-//	"os"
 	"github.com/gorilla/websocket"
 	"github.com/deven96/gosock/pkg/custlog"
 )
@@ -13,6 +12,7 @@ func init(){
 	
 }
 
+
 type client struct {
 	// websocket per client
 	socket *websocket.Conn
@@ -20,6 +20,8 @@ type client struct {
 	send chan []byte
 	// room is the room this client is chatting on
 	room *room
+	// color assigned to the client
+	color string
 }
 
 // read from the websocket
@@ -34,7 +36,7 @@ func (c *client) read(){
 		}
 		// send msg to the forward channel of the client
 		c.room.forward <- msg
-		custlog.Info.Printf("Reading message %v", msg)
+		custlog.Info.Printf("Reading message **%s**", msg)
 	}
 }
 
@@ -44,9 +46,9 @@ func (c *client) write(){
 
 	for msg := range c.send {
 		err := c.socket.WriteMessage(websocket.TextMessage, msg)
-		if err != nil {			custlog.Error.Println(err)
+		if err != nil {
+			custlog.Error.Println(err)
 			return
 		}
 	}
-	custlog.Info.Printf("Writing message %v", c.send)
 }

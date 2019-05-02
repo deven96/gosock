@@ -53,11 +53,12 @@ func main() {
 	custlog.Info.Println("Initializing Room...")
 	go r.run()
 	// port variable
-	port := ":8008"
+	// server_location := "192.168.43.92:8008"
+	server_location := "localhost:8008"
 	//start the webserver
-	custlog.Info.Println("Running server started on Port", port)
+	custlog.Info.Println("Running server started on ", server_location)
 	
-	if err := http.ListenAndServe(port, nil); err != nil {
+	if err := http.ListenAndServe(server_location, nil); err != nil {
 		custlog.Error.Println(err)
 	}
 }

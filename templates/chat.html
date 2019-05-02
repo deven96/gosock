@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Chat</title>
+        <title>GOSOCK Chat by deven96</title>
     <style>
         input { display: block; }
         ul
@@ -8,16 +8,19 @@
     </style>
     </head>
     <body>
-        <ul id="messages"></ul>
-        <form id="chatbox">
-        <textarea></textarea>
-        <input type="submit" value="Send" /></form>
+        <div class="phone">
+            <ul id="messages"></ul>
+            <form id="chatbox">
+                <input type="text" name="" id="message">
+                <button type="submit">Send</button>
+            </form>
+        </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
     </script>
     <script>
         $(function(){
         var socket = null;
-        var msgBox = $("#chatbox textarea");
+        var msgBox = $("#chatbox #message");
         var messages = $("#messages");
         $("#chatbox").submit(function(){
         if (!msgBox.val()) return false;
@@ -32,15 +35,95 @@
         if (!window["WebSocket"]) {
         alert("Error: Your browser does not support web sockets.")
         } else {
-        socket = new WebSocket("ws://localhost:8008/room");
+        // var ws = "ws://192.168.43.92:8008/room"
+        var ws = "ws://localhost:8008/room"
+        socket = new WebSocket(ws);
         socket.onclose = function() {
         alert("Connection has been closed.");
         }
+        var i = 0
         socket.onmessage = function(e) {
-        messages.append($("<li>").text(e.data));
+            var server_message = e.data
+            if (i % 2 == 0) {
+                messages.append($("<li>").text(server_message).addClass("float-left"))
+            }
+            else {
+                messages.append($("<li>").text(server_message).addClass("float-right"))
+            }
+            i = i + 1
+            return false
         }
         }
         });
     </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0 25px;
+            background: #777;
+            display: flex;
+            align-items: center;
+        }
+
+        div.phone {
+            width: 380px;
+            height: 95vh;
+            background: #333;
+            margin: 0 auto;
+            border: 10px solid #fff;
+            border-radius: 5px;
+        }
+
+        form {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-around;
+            position: fixed;
+            bottom: 30px;
+            width: 310px;
+            margin: 0 auto;
+        }
+        input {
+            width: 200px;
+            height: 50px;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        button {
+            width: 90px;
+            background: #34fe21;
+            border-radius: 20px;
+            height: 50px;
+            outline: none;
+            border: none;
+        }
+
+        ul {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        li {
+            margin: 5px 0;
+            background: #fff;
+            box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.2);
+            clear: both;
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+
+        .float-right {
+            float: right;
+            background: #a9d3a6;
+            border-top-left-radius: 0;
+        }
+
+        .float-left {
+            float: left;
+            background:whitesmoke;
+            border-top-right-radius: 0;
+        }
+    </style>
     </body>
 </html>

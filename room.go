@@ -1,7 +1,9 @@
 package main
 
 import(
-//	"os"
+	"fmt"
+	"crypto/rand"
+	"encoding/hex"
 	"net/http"
 	"github.com/gorilla/websocket"
 	"github.com/deven96/gosock/pkg/custlog"
@@ -13,6 +15,17 @@ func init(){
 	//TRACE will be Discarded, while the rest will be routed accordingly
 	custlog.LogInit(def_writers)	
 	
+}
+
+// generate random color string
+func randHex() (string, error) {
+	bytes := make([]byte, 3)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	ret := "#" + hex.EncodeToString(bytes)
+	custlog.Info.Printf("Assigning %s color to new client", ret)
+	return ret, nil
 }
 
 type room struct {
@@ -34,14 +47,23 @@ func (r *room) run(){
 			case client:= <- r.join:
 				// joining
 				r.clients[client] = true
-				custlog.Info.Printf("Client %v is joining...", client)
+				custlog.Info.Printf("Client %s is joining...", client.color)
+				txt := fmt.Sprintf("ADMIN: Client %s is joining the room", client.color)
+				msg := []byte(txt)
+				for client := range r.clients {
+					client.send <- msg
+				}
 			case client:= <- r.leave:
 				// leaving
 				// delete client
-				custlog.Warning.Printf("Deleting Client %v from room clients and closing send channel...", client)
+				custlog.Warning.Printf("Removing Client %s from room clients and closing send channel...", client.color)
 				delete(r.clients, client)
 				// close send channel of client
 				close(client.send)
+				msg := []byte(fmt.Sprintf("ADMIN: Client %s is leaving the room", client.color))
+				for client := range r.clients {
+					client.send <- msg
+				}
 			case msg := <- r.forward:
 				for client := range r.clients {
 					client.send <- msg
@@ -67,10 +89,13 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request){
 		custlog.Error.Println(err)
 		return
 	} 
+	gen_color, _ := randHex()
+	// pass client address to room
 	client := &client {
 		socket : socket,
 		send: make(chan []byte, messageBufferSize),
 		room: r,
+		color: gen_color,
 	}
 	r.join <- client
 	defer func() {r.leave <- client} ()
