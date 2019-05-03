@@ -3,6 +3,10 @@
 This is a basic implementation of a chatroom using websockets.
 Embedded in this project is also a [custom logging library](pkg/custlog/)
 
+![Docker Automated Build](https://img.shields.io/docker/automated/deven96/gosock.svg?style=flat)
+![Docker Pulls](https://img.shields.io/docker/pulls/deven96/gosock.svg?style=flat)
+
+
 ## Overview [![GoDoc](https://godoc.org/github.com/deven96/gosock?status.svg)](https://godoc.org/github.com/deven96/gosock)
 
 ## Install
