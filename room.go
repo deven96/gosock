@@ -11,7 +11,7 @@ import(
 
 func init(){
 	// append to the main log
-	def_writers := custlog.DefaultWriters("main.log", true)
+	def_writers := custlog.DefaultWriters("gosock.log", true)
 	//TRACE will be Discarded, while the rest will be routed accordingly
 	custlog.LogInit(def_writers)	
 	

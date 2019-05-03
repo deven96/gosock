@@ -1,0 +1,17 @@
+language: go
+sudo: required
+go:
+- 1.x
+branches:
+  only:
+  - master
+services:
+- docker
+
+script: docker build -f ./deploy/Dockerfile -t $DOCKER_USERNAME/gosock .
+deploy:
+- provider: script
+  script: bash ./deploy/docker_push.sh
+deploy:
+  provider: heroku
+  api_key: $HEROKU_KEY
