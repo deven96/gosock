@@ -11,9 +11,9 @@ import(
 
 func init(){
 	// append to the main log
-	def_writers := custlog.DefaultWriters(*LOG_FILE, true)
+	defwriters := custlog.DefaultWriters(*LogFile, true)
 	//TRACE will be Discarded, while the rest will be routed accordingly
-	custlog.LogInit(def_writers)	
+	custlog.LogInit(defwriters)	
 	
 }
 

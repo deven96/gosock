@@ -7,8 +7,8 @@ import (
 
 func init(){
 	//initialize log file
-	def_writers := custlog.DefaultWriters(*LOG_FILE, true)
-	custlog.LogInit(def_writers)
+	defwriters := custlog.DefaultWriters(*LogFile, true)
+	custlog.LogInit(defwriters)
 }
 
 type message struct {

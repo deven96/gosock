@@ -16,11 +16,11 @@ import (
 )
 
 // declare global variables for use throughout the main package
-var TEMPLATE_DIR = filepath.Join("templates")
-var ASSETS_DIR = filepath.Join("assets")
+var TemplateDir = filepath.Join("templates")
+var AssetsDir = filepath.Join("assets")
 // command line arguments and defaults
-var LOG_FILE = flag.String("log", "gosock.log", "Name of the log file to save to")
-var SERVER_LOCATION = flag.String("addr", ":8008", "The addr of the application.")
+var LogFile = flag.String("log", "gosock.log", "Name of the log file to save to")
+var ServerLocation = flag.String("addr", ":8008", "The addr of the application.")
 
 // templateHandler represents a single template
 type templateHandler struct {
@@ -33,7 +33,7 @@ type templateHandler struct {
 // ServeHTTP handles the HTTPRequest
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func(){
-		filearr := []string{TEMPLATE_DIR, t.filename}
+		filearr := []string{TemplateDir, t.filename}
 		filepath := strings.Join(filearr, "/")
 		t.templ = template.Must(template.ParseFiles(filepath))
 	})
@@ -42,9 +42,9 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	flag.Parse() // parse the flags
-	def_writers := custlog.DefaultWriters(*LOG_FILE, false)
+	defwriters := custlog.DefaultWriters(*LogFile, false)
 	//TRACE will be Discarded, while the rest will be routed accordingly
-	custlog.LogInit(def_writers)	
+	custlog.LogInit(defwriters)	
 	custlog.Trace.Println("Imported Custom Logging")
 	custlog.Info.Println("Log file can be found at ", custlog.Logfile)
 	//os.Setenv("GOSOCK_LOG", custlog.Logfile)
@@ -56,7 +56,7 @@ func main() {
 	// Handle function for route "/"
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 	http.Handle("/room", r)
-	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir(ASSETS_DIR))))
+	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir(AssetsDir))))
 	
 
 
@@ -65,9 +65,9 @@ func main() {
 	custlog.Info.Println("Initializing Room...")
 	go r.run()
 	//start the webserver
-	custlog.Info.Printf("Running server started on %s", *SERVER_LOCATION)
+	custlog.Info.Printf("Running server started on %s", *ServerLocation)
 	
-	if err := http.ListenAndServe(*SERVER_LOCATION, nil); err != nil {
+	if err := http.ListenAndServe(*ServerLocation, nil); err != nil {
 		custlog.Error.Println(err)
 	}
 }
