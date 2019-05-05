@@ -3,7 +3,8 @@
 This is a basic implementation of a chatroom using websockets.
 Embedded in this project is also a [custom logging library](pkg/custlog/)
 
-![Docker Automated Build](https://img.shields.io/docker/automated/deven96/gosock.svg?style=flat)
+[![Build Status](https://travis-ci.org/deven96/gosock.svg?branch=master)](https://travis-ci.org/deven96/gosock)
+[Docker Automated Build](https://img.shields.io/docker/automated/deven96/gosock.svg?style=flat)
 ![Docker Pulls](https://img.shields.io/docker/pulls/deven96/gosock.svg?style=flat)
 
 
