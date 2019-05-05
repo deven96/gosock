@@ -19,11 +19,11 @@ func init(){
 
 // generate random color string
 func randHex() (string, error) {
-	bytes_ := make([]byte, 3)
-	if _, err := rand.Read(bytes_); err != nil {
+	bytez := make([]byte, 3)
+	if _, err := rand.Read(bytez); err != nil {
 		return "", err
 	}
-	ret := "#" + hex.EncodeToString(bytes_)
+	ret := "#" + hex.EncodeToString(bytez)
 	custlog.Info.Printf("Assigning %s color to new client", ret)
 	return ret, nil
 }
@@ -94,13 +94,13 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request){
 		custlog.Trace.Println(err)
 		return
 	} 
-	gen_color, _ := randHex()
+	gencolor, _ := randHex()
 	// pass client address to room
 	client := &client {
 		socket : socket,
 		send: make(chan *message, messageBufferSize),
 		room: r,
-		color: gen_color,
+		color: gencolor,
 	}
 	r.join <- client
 	defer func() {r.leave <- client} ()

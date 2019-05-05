@@ -16,10 +16,14 @@ import (
 )
 
 // declare global variables for use throughout the main package
+// template directory
 var TemplateDir = filepath.Join("templates")
+// assets directory
 var AssetsDir = filepath.Join("assets")
-// command line arguments and defaults
+// command line arguments gotten from flag
+// save logs to this file, defaults to "gosock.log"
 var LogFile = flag.String("log", "gosock.log", "Name of the log file to save to")
+// run web server at this address
 var ServerLocation = flag.String("addr", ":8008", "The addr of the application.")
 
 // templateHandler represents a single template
