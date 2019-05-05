@@ -56,7 +56,7 @@ To run the project,
 
 ## Example
 
-![Example usage](static/assets/example.png)
+![Example usage](assets/images/example.png)
 
 ## License (MIT)
 

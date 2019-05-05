@@ -1,12 +1,14 @@
 package main
 
 import (
+	"time"
 	"github.com/gorilla/websocket"
 	"github.com/deven96/gosock/pkg/custlog"
 )
 
 func init(){
-	def_writers := custlog.DefaultWriters("gosock.log", true)
+	// log file flag
+	def_writers := custlog.DefaultWriters(*LOG_FILE, true)
 	//TRACE will be Discarded, while the rest will be routed accordingly
 	custlog.LogInit(def_writers)	
 	
@@ -17,7 +19,7 @@ type client struct {
 	// websocket per client
 	socket *websocket.Conn
 	// send is a channel on which messages are sent
-	send chan []byte
+	send chan *message
 	// room is the room this client is chatting on
 	room *room
 	// color assigned to the client
@@ -29,13 +31,16 @@ func (c *client) read(){
 	defer c.socket.Close()
 
 	for {
-		_, msg, err := c.socket.ReadMessage()
+		var msg *message
+		err := c.socket.ReadJSON(&msg)
 		if err != nil {
-			custlog.Error.Println(err)
+			custlog.Trace.Println(err)
 			return
 		}
 		// send msg to the forward channel of the client
-		custlog.Info.Printf("Reading message **%s**", msg)
+		custlog.Info.Printf("Message received from %s: %s", c.color, msg.Message)
+		msg.When = time.Now()
+		msg.Code = c.color
 		c.room.forward <- msg
 	}
 }
@@ -45,7 +50,7 @@ func (c *client) write(){
 	defer c.socket.Close()
 
 	for msg := range c.send {
-		err := c.socket.WriteMessage(websocket.TextMessage, msg)
+		err := c.socket.WriteJSON(msg)
 		if err != nil {
 			custlog.Error.Println(err)
 			return

@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>GOSOCK Chat by deven96</title>
+        <meta name="viewport" content="initial-scale=1" />
     <style>
         input { display: block; }
         ul
@@ -28,30 +29,37 @@
         alert("Error: There is no socket connection.");
         return false;
         }
-        socket.send(msgBox.val());
+        socket.send(JSON.stringify({"Message": msgBox.val()}));
         msgBox.val("");
         return false;
         });
         if (!window["WebSocket"]) {
         alert("Error: Your browser does not support web sockets.")
         } else {
-        // var ws = "ws://192.168.43.92:8008/room"
-        var ws = "ws://localhost:8008/room"
+        // dynamically assign host location from golang
+        var ws = "ws://{{ .Host }}/room"
         socket = new WebSocket(ws);
         socket.onclose = function() {
         alert("Connection has been closed.");
         }
         var i = 0
         socket.onmessage = function(e) {
-            console.log(e)
-            var server_message = e.data
+            var socket_json = JSON.parse(e.data)
             if (i % 2 == 0) {
-                messages.append($("<li>").text(server_message).addClass("float-left"))
+                messages.append($("<li>")
+                .text(socket_json.Message)
+                .addClass("float-left")
+                .css("background-color", socket_json.Code));
             }
             else {
-                messages.append($("<li>").text(server_message).addClass("float-right"))
+                messages.append($("<li>")
+                .text(socket_json.Message)
+                .addClass("float-right")
+                .css("background-color", socket_json.Code))
             }
             i = i + 1
+            // automatically scroll to last message
+            $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
             return false
         }
         }
@@ -59,27 +67,28 @@
     </script>
     <style>
         body {
-            margin: 0;
-            padding: 0 25px;
+            padding: 0;
             background: #777;
-            display: flex;
-            align-items: center;
         }
 
         div.phone {
-            width: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 360px;
             height: 95vh;
             background: #333;
             margin: 0 auto;
-            border: 10px solid #fff;
+            border: 5px solid #fff;
             border-radius: 5px;
+            overflow: hidden;
         }
 
         form {
             display: flex;
+            flex: 0.1;
             flex-flow: row wrap;
             justify-content: space-around;
-            position: fixed;
             bottom: 30px;
             width: 310px;
             margin: 0 auto;
@@ -103,27 +112,35 @@
         ul {
             width: 80%;
             margin: 0 auto;
+            display: flex;
+            flex: 0.9;
+            overflow-y: auto;
+            flex-direction: column;
         }
 
         li {
             margin: 5px 0;
             background: #fff;
             box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.2);
-            clear: both;
             border-radius: 10px;
             padding: 5px 10px;
         }
 
         .float-right {
-            float: right;
-            background: #a9d3a6;
+            align-self: start;
             border-top-left-radius: 0;
         }
 
         .float-left {
-            float: left;
-            background:whitesmoke;
+            align-self: end;
             border-top-right-radius: 0;
+        }
+
+        @media only screen and (max-width: 450px) {
+                    div.phone {
+                                    width: 100%;
+                                    height: 100%;
+                                }                                    
         }
     </style>
     </body>

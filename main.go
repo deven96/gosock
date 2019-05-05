@@ -1,10 +1,12 @@
 /*
  Simple Chat application using sockets in GoLang
 */
+
+
 package main
 
 import (
-	"os"
+	"flag"
 	"net/http"
 	"text/template"
 	"path/filepath"
@@ -13,8 +15,12 @@ import (
 	"github.com/deven96/gosock/pkg/custlog"
 )
 
-var TEMPLATE_FOLDER string = filepath.Join("templates")
-
+// declare global variables for use throughout the main package
+var TEMPLATE_DIR = filepath.Join("templates")
+var ASSETS_DIR = filepath.Join("assets")
+// command line arguments and defaults
+var LOG_FILE = flag.String("log", "gosock.log", "Name of the log file to save to")
+var SERVER_LOCATION = flag.String("addr", ":8008", "The addr of the application.")
 
 // templateHandler represents a single template
 type templateHandler struct {
@@ -23,28 +29,20 @@ type templateHandler struct {
 	templ *template.Template
 }
 
-func getEnvOrDefault (key, defaultValue string) (result string) {
-	result = defaultValue
-	value, ok := os.LookupEnv(key)
-	if ok {
-		result = value
-	}
-	return 
-}
 
 // ServeHTTP handles the HTTPRequest
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func(){
-		filearr := []string{TEMPLATE_FOLDER, t.filename}
+		filearr := []string{TEMPLATE_DIR, t.filename}
 		filepath := strings.Join(filearr, "/")
 		t.templ = template.Must(template.ParseFiles(filepath))
 	})
-	t.templ.Execute(w, nil)
+	t.templ.Execute(w, r)
 }
 
 func main() {
-	// set log name along with default outputs
-	def_writers := custlog.DefaultWriters("gosock.log", false)
+	flag.Parse() // parse the flags
+	def_writers := custlog.DefaultWriters(*LOG_FILE, false)
 	//TRACE will be Discarded, while the rest will be routed accordingly
 	custlog.LogInit(def_writers)	
 	custlog.Trace.Println("Imported Custom Logging")
@@ -58,17 +56,18 @@ func main() {
 	// Handle function for route "/"
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 	http.Handle("/room", r)
+	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir(ASSETS_DIR))))
+	
 
+
+	
 	//start the room
 	custlog.Info.Println("Initializing Room...")
 	go r.run()
-	// port variable
-	// server_location := "192.168.43.92:8008"
-	server_location:= getEnvOrDefault("PORT", ":8008")
 	//start the webserver
-	custlog.Info.Println("Running server started on ", server_location)
+	custlog.Info.Printf("Running server started on %s", *SERVER_LOCATION)
 	
-	if err := http.ListenAndServe(server_location, nil); err != nil {
+	if err := http.ListenAndServe(*SERVER_LOCATION, nil); err != nil {
 		custlog.Error.Println(err)
 	}
 }

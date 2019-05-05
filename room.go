@@ -11,7 +11,7 @@ import(
 
 func init(){
 	// append to the main log
-	def_writers := custlog.DefaultWriters("gosock.log", true)
+	def_writers := custlog.DefaultWriters(*LOG_FILE, true)
 	//TRACE will be Discarded, while the rest will be routed accordingly
 	custlog.LogInit(def_writers)	
 	
@@ -19,11 +19,11 @@ func init(){
 
 // generate random color string
 func randHex() (string, error) {
-	bytes := make([]byte, 3)
-	if _, err := rand.Read(bytes); err != nil {
+	bytes_ := make([]byte, 3)
+	if _, err := rand.Read(bytes_); err != nil {
 		return "", err
 	}
-	ret := "#" + hex.EncodeToString(bytes)
+	ret := "#" + hex.EncodeToString(bytes_)
 	custlog.Info.Printf("Assigning %s color to new client", ret)
 	return ret, nil
 }
@@ -31,7 +31,7 @@ func randHex() (string, error) {
 type room struct {
 	//forward is then channel holding the incoming messages
 	// that should be forwarded to other clients
-	forward chan []byte
+	forward chan *message
 	// clients that want to join
 	join chan *client
 	// clients that want to leave
@@ -48,8 +48,10 @@ func (r *room) run(){
 				// joining
 				r.clients[client] = true
 				custlog.Info.Printf("Client %s joined the room...", client.color)
-				txt := fmt.Sprintf("ADMIN: Client %s joined the room", client.color)
-				msg := []byte(txt)
+				msg := &message{
+					Code: "#ffffff",
+					Message: fmt.Sprintf("ADMIN: Client %s joined the room", client.color),
+				}
 				for client := range r.clients {
 					client.send <- msg
 				}
@@ -60,7 +62,10 @@ func (r *room) run(){
 				delete(r.clients, client)
 				// close send channel of client
 				close(client.send)
-				msg := []byte(fmt.Sprintf("ADMIN: Client %s left the room", client.color))
+				msg := &message{
+					Code: "#ffffff",
+					Message: fmt.Sprintf("ADMIN: Client %s left the room", client.color),
+				}
 				for client := range r.clients {
 					client.send <- msg
 				}
@@ -86,14 +91,14 @@ var upgrader = &websocket.Upgrader{ReadBufferSize: socketBufferSize, WriteBuffer
 func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request){
 	socket, err := upgrader.Upgrade(w, req, nil)
 	if err!= nil {
-		custlog.Error.Println(err)
+		custlog.Trace.Println(err)
 		return
 	} 
 	gen_color, _ := randHex()
 	// pass client address to room
 	client := &client {
 		socket : socket,
-		send: make(chan []byte, messageBufferSize),
+		send: make(chan *message, messageBufferSize),
 		room: r,
 		color: gen_color,
 	}
@@ -106,7 +111,7 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request){
 // creates a new room
 func newRoom() *room {
 	return &room{
-		forward: make(chan []byte),
+		forward: make(chan *message),
 		join: make(chan *client),
 		leave: make(chan *client),
 		clients: make(map[*client]bool),
