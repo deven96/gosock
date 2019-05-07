@@ -55,9 +55,11 @@ To run the project,
     ./gosock
 ```
 
-## Example
+For using the binaries only, read [Binaries usage](assets/extra/usage.md)
 
-![Example usage](assets/images/example.png)
+## Example Interaction
+
+![Example interaction](assets/images/example.png)
 
 ## License (MIT)
 
