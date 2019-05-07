@@ -25,7 +25,7 @@ To host the chat application while accessing it across the network :
 - Connect the hosting device (windows/mac/linux) to a wifi/router network
 - Check the device IP
 
-```
+```bash
     # linux/mac
     ifconfig
     Look for Network adapter
@@ -39,7 +39,7 @@ To host the chat application while accessing it across the network :
 
 - Start GoSock server on "IP:desiredport"
 
-```
+```bash
     # using IP 192.168.10.23 and port 9000
     gosock_windows_amd64.exe -addr="192.168.10.23:9000"
 

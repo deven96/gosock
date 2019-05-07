@@ -4,7 +4,6 @@ This is a basic implementation of a chatroom using websockets.
 Embedded in this project is also a [custom logging library](pkg/custlog/)
 
 [![Build Status](https://travis-ci.org/deven96/gosock.svg?branch=master)](https://travis-ci.org/deven96/gosock)
-[Docker Automated Build](https://img.shields.io/docker/automated/deven96/gosock.svg?style=flat)
 ![Docker Pulls](https://img.shields.io/docker/pulls/deven96/gosock.svg?style=flat)
 
 
@@ -45,13 +44,13 @@ To run the project,
 
     cd $GOPATH/github.com/deven96/gosock
 
-    // run the project in develop mode
+    # run the project in develop mode
     go run *.go
 
-    // generate executable
+    # generate executable for current os
     go build github.com/deven96/gosock
 
-    // run the executable
+    # run the executable
     ./gosock
 ```
 
