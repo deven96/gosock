@@ -50,7 +50,7 @@ func (r *room) run(){
 				custlog.Info.Printf("Client %s joined the room...", client.color)
 				msg := &message{
 					Code: "#ffffff",
-					Message: fmt.Sprintf("ADMIN: Client %s joined the room", client.color),
+					Message: fmt.Sprintf("Client %s joined the room", client.color),
 				}
 				for client := range r.clients {
 					client.send <- msg
@@ -64,7 +64,7 @@ func (r *room) run(){
 				close(client.send)
 				msg := &message{
 					Code: "#ffffff",
-					Message: fmt.Sprintf("ADMIN: Client %s left the room", client.color),
+					Message: fmt.Sprintf("Client %s left the room", client.color),
 				}
 				for client := range r.clients {
 					client.send <- msg

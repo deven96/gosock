@@ -43,20 +43,29 @@
         alert("Connection has been closed.");
         }
         var i = 0
+        console.log("ran once")
         socket.onmessage = function(e) {
             var socket_json = JSON.parse(e.data)
+            // display_message
+            var display_message = " : " +  socket_json.Message
+            // create sender text
+            var sender = socket_json.Code
+            if (socket_json.Code == "#ffffff"){
+                sender = "ADMIN"
+            }
+            var full_message = sender + display_message
+            // create list item to house message
+            var li_item = $("<li>")
+                            .text(full_message)
+                            .css("background-color", socket_json.Code);
+            
             if (i % 2 == 0) {
-                messages.append($("<li>")
-                .text(socket_json.Message)
-                .addClass("float-left")
-                .css("background-color", socket_json.Code));
+                li_item.addClass("float-left")
             }
             else {
-                messages.append($("<li>")
-                .text(socket_json.Message)
-                .addClass("float-right")
-                .css("background-color", socket_json.Code))
+                li_item.addClass("float-right")
             }
+            messages.append(li_item);
             i = i + 1
             // automatically scroll to last message
             $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
@@ -119,7 +128,9 @@
         }
 
         li {
+            max-width: 90%;
             margin: 5px 0;
+            word-wrap: break-word;
             background: #fff;
             box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.2);
             border-radius: 10px;
