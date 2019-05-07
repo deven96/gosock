@@ -11,13 +11,11 @@ import (
 	"text/template"
 	"path/filepath"
 	"sync"
-	"strings"
 	"github.com/deven96/gosock/pkg/custlog"
+	"github.com/gobuffalo/packr"
 )
 
 // declare global variables for use throughout the main package
-// template directory
-var TemplateDir = filepath.Join("templates")
 // assets directory
 var AssetsDir = filepath.Join("assets")
 // command line arguments gotten from flag
@@ -37,9 +35,13 @@ type templateHandler struct {
 // ServeHTTP handles the HTTPRequest
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func(){
-		filearr := []string{TemplateDir, t.filename}
-		filepath := strings.Join(filearr, "/")
-		t.templ = template.Must(template.ParseFiles(filepath))
+		tmpdir := packr.NewBox("./templates")
+		custlog.Trace.Println("Created Packaging for templates")
+		// get the string of the html
+		htmlstr, _ := tmpdir.FindString(t.filename)
+		// create a new template instance to parse the htmlstr
+		parser := template.New("parser")
+		t.templ = template.Must(parser.Parse(htmlstr))
 	})
 	t.templ.Execute(w, r)
 }
@@ -55,13 +57,18 @@ func main() {
 
 	// create a room
 	r := newRoom()
+
+	//packers for packaging static files
+	//assets -> js, images
+	assetBox := packr.NewBox("./assets")
+	custlog.Info.Printf("Creating Packaging for assets %s", assetBox)
+	//templates -> html
 	
 	/* Routes */
 	// Handle function for route "/"
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 	http.Handle("/room", r)
-	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir(AssetsDir))))
-	
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(assetBox)))
 
 
 	

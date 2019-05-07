@@ -16,7 +16,7 @@
                 <button type="submit">Send</button>
             </form>
         </div>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
+    <script src="assets/js/jquery-3.4.0.min.js">
     </script>
     <script>
         $(function(){
@@ -43,7 +43,6 @@
         alert("Connection has been closed.");
         }
         var i = 0
-        console.log("ran once")
         socket.onmessage = function(e) {
             var socket_json = JSON.parse(e.data)
             // display_message
