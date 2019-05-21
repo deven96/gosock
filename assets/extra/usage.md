@@ -1,7 +1,7 @@
 # How to Use GoSock binaries
 
 This is a simple guide to use the distributed binaries e.g (.exe for windows)
-The distributed binaries can be found in the [binaries](../../binaries) folder
+The distributed binaries can be found at the [releases](https://github.com/deven96/gosock/releases)
 
 ## Usage
 
