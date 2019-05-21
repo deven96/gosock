@@ -1,0 +1,78 @@
+body {
+    padding: 0;
+    background: #777;
+}
+
+div.phone {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 360px;
+    height: 95vh;
+    background: #333;
+    margin: 0 auto;
+    border: 5px solid #fff;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+form {
+    display: flex;
+    flex: 0.1;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    bottom: 30px;
+    width: 310px;
+    margin: 0 auto;
+}
+input {
+    width: 200px;
+    height: 50px;
+    border-radius: 20px;
+    outline: none;
+}
+
+button {
+    width: 90px;
+    background: #34fe21;
+    border-radius: 20px;
+    height: 50px;
+    outline: none;
+    border: none;
+}
+
+ul {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex: 0.9;
+    overflow-y: auto;
+    flex-direction: column;
+}
+
+li {
+    max-width: 90%;
+    margin: 5px 0;
+    word-wrap: break-word;
+    background: #fff;
+    box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.float-right {
+    align-self: start;
+    border-top-left-radius: 0;
+}
+
+.float-left {
+    align-self: end;
+    border-top-right-radius: 0;
+}
+
+@media only screen and (max-width: 450px) {
+            div.phone {
+                            width: 100%;
+                            height: 100%;
+                        }                                    
+}

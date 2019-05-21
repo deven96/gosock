@@ -51,7 +51,7 @@ func main() {
 	defwriters := custlog.DefaultWriters(*LogFile, false)
 	//TRACE will be Discarded, while the rest will be routed accordingly
 	custlog.LogInit(defwriters)	
-	custlog.Trace.Println("Imported Custom Logging")
+	custlog.Trace.Println("Imported Deven Custom Logging")
 	custlog.Info.Println("Log file can be found at ", custlog.Logfile)
 	//os.Setenv("GOSOCK_LOG", custlog.Logfile)
 
@@ -61,12 +61,13 @@ func main() {
 	//packers for packaging static files
 	//assets -> js, images
 	assetBox := packr.NewBox("./assets")
-	custlog.Info.Printf("Creating Packaging for assets %s", assetBox)
+	custlog.Trace.Printf("Creating Packaging for assets of type %T", assetBox)
 	//templates -> html
 	
 	/* Routes */
 	// Handle function for route "/"
 	http.Handle("/", &templateHandler{filename: "chat.html"})
+	// add everyone to the same room
 	http.Handle("/room", r)
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(assetBox)))
 

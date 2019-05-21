@@ -1,26 +1,4 @@
-<html>
-    <head>
-        <title>GOSOCK Chat by deven96</title>
-        <meta name="viewport" content="initial-scale=1" />
-    <style>
-        input { display: block; }
-        ul
-        { list-style: none; }
-    </style>
-    <link href="/assets/css/chatview.css" rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <div class="phone">
-            <ul id="messages"></ul>
-            <form id="chatbox">
-                <input type="text" name="" id="message">
-                <button type="submit">Send</button>
-            </form>
-        </div>
-    <script src="assets/js/jquery-3.4.0.min.js">
-    </script>
-    <script>
-    $(function(){
+$(function(){
     var socket = null;
     var msgBox = $("#chatbox #message");
     var messages = $("#messages");
@@ -31,7 +9,6 @@
     return false;
     }
     socket.send(JSON.stringify({"Message": msgBox.val()}));
-    //empty the message box
     msgBox.val("");
     return false;
     });
@@ -73,6 +50,3 @@
     }
     }
     });
-    </script>
-    </body>
-</html>
