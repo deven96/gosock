@@ -15,3 +15,9 @@ binaries/*
 # custom logging
 *.log
 logs/*
+
+# vim swp files
+*.swp
+
+# bin folder
+bin/*
