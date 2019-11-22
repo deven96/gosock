@@ -16,7 +16,11 @@ $(function(){
     alert("Error: Your browser does not support web sockets.")
     } else {
     // dynamically assign host location from golang
-    socket = new WebSocket("ws://{{ .Host }}/room");
+      // get current protocol to use
+    let protocol = function(){ return location.protocol.match(/^https/) ? "wss" : "ws" }
+    let uri = "{{.Host}}/room" 
+    let ws_link = `${protocol()}://${uri}`
+    socket = new WebSocket(ws_link);
     socket.onclose = function() {
     alert("Connection has been closed.");
     }
