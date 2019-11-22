@@ -66,10 +66,11 @@ func main() {
 	
 	/* Routes */
 	// Handle function for route "/"
+  http.Handle("/chathandler", &templateHandler{filename: "chathandler.js"})
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(assetBox)))
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 	// add everyone to the same room
 	http.Handle("/room", r)
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(assetBox)))
 
 
 	
@@ -77,9 +78,10 @@ func main() {
 	custlog.Info.Println("Initializing Room...")
 	go r.run()
 	//start the webserver
-	custlog.Info.Printf("Running server started on %s", *ServerLocation)
 	
 	if err := http.ListenAndServe(*ServerLocation, nil); err != nil {
 		custlog.Error.Println(err)
-	}
+	}else{
+    custlog.Info.Printf("Running server started on %s", *ServerLocation)
+  }
 }
