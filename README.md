@@ -60,6 +60,17 @@ For using the binaries only, read [Binaries usage](assets/extra/usage.md)
 
 ![Example interaction](assets/images/example.png)
 
+## TODO
+
+ - [ ] Incorporate a standard Golang ORM
+ - [ ] Include User and Message models
+ - [ ] Extend chat interface to include login and signup
+ - [ ] Include face avatar on every message
+ - [ ] Create a Rudeness API that can detect how unsensitive a statement is
+ - [ ] Kick avatar out after every 3 overly rude messages
+ - [ ] Deploy on Linode server
+ - [ ] Linode deploy should be linked to Travis pipeline 
+
 ## License (MIT)
 
 This project is opened under the [MIT 2.0 License](https://github.com/deven96/gosock/blob/master/LICENSE) which allows very broad use for both academic and commercial purposes.
